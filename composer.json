@@ -25,5 +25,10 @@
                 "Verkdev\\StripeBladeUi\\StripeBladeUiServiceProvider"
             ]
         }
+    },
+    "scripts": {
+        "post-package-install": [
+            "@php artisan stripeui:auto-install"
+        ]
     }
 }

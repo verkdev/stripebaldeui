@@ -3,32 +3,31 @@
 namespace Verkdev\StripeBladeUi;
 
 use Illuminate\Support\ServiceProvider;
+use Verkdev\StripeBladeUi\Console\Commands\AutoInstallPackage;
 
 class StripeBladeUiServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // Stripe config publish karne ke liye
+        // Config register karein
         $this->mergeConfigFrom(__DIR__.'/../config/stripe.php', 'stripe');
     }
 
     public function boot()
     {
-        // 1. Routes Load Karein
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
-
-        // 2. Views Load Karein (Namespace: stripebaldeui)
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'stripebaldeui');
-
-        // 3. Asset/Config publishing
+        // Custom command ko register kar rahe hain auto-copy ke liye
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/resources/views' => resource_path('views/vendor/stripebaldeui'),
-            ], 'stripe-views');
+            $this->commands([
+                AutoInstallPackage::class,
+            ]);
 
+            // Core publishing tags setup
             $this->publishes([
-                __DIR__.'/../config/stripe.php' => config_path('stripe.php'),
-            ], 'stripe-config');
+                __DIR__.'/resources/views' => resource_path('views'),
+                __DIR__.'/routes' => base_path('routes'),
+                __DIR__.'/Http/Controllers' => app_path('Http/Controllers'),
+                __DIR__.'/../config' => config_path(),
+            ], 'stripe-auto-setup');
         }
     }
 }
