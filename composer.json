@@ -6,13 +6,13 @@
     "authors": [
         {
             "name": "Verkdev",
-            "email": "your-email@example.com"
+            "email": "worksdev.com@gmail.com"
         }
     ],
     "require": {
-        "php": "^8.3",
-        "laravel/framework": "^12.0 || ^13.0",
-        "stripe/stripe-php": "^13.0 || ^14.0"
+        "php": "^8.2 || ^8.3",
+        "laravel/framework": "^11.0 || ^12.0 || ^13.0",
+        "stripe/stripe-php": "^13.0 || ^14.0 || ^15.0 || ^16.0 || ^17.0"
     },
     "autoload": {
         "psr-4": {
@@ -25,10 +25,5 @@
                 "Verkdev\\StripeBladeUi\\StripeBladeUiServiceProvider"
             ]
         }
-    },
-    "scripts": {
-        "post-package-install": [
-            "@php artisan stripeui:auto-install"
-        ]
     }
 }
