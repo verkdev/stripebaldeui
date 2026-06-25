@@ -23,7 +23,9 @@
         "laravel": {
             "providers": [
                 "Verkdev\\StripeBladeUi\\StripeBladeUiServiceProvider"
-            ]
+            ],
+            "aliases": {},
+            "dont-discover": []
         }
     }
 }

@@ -20,11 +20,13 @@ class StripeBladeUiServiceProvider extends ServiceProvider
             ]);
 
             $this->publishes([
-                __DIR__.'/resources/views' => resource_path('views'),
-                __DIR__.'/routes' => base_path('routes'),
-                __DIR__.'/Http/Controllers' => app_path('Http/Controllers'),
-                __DIR__.'/../config' => config_path(),
+                __DIR__.'/resources/views/stripe.blade.php' => resource_path('views/stripe.blade.php'),
+                __DIR__.'/Http/Controllers/StripePaymentController.php' => app_path('Http/Controllers/StripePaymentController.php'),
+                __DIR__.'/../config/stripe.php' => config_path('stripe.php'),
             ], 'stripe-auto-setup');
         }
+
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'stripebaldeui');
     }
 }

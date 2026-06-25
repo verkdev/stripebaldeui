@@ -4,6 +4,7 @@ namespace Verkdev\StripeBladeUi\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 class AutoInstallPackage extends Command
 {
@@ -17,8 +18,21 @@ class AutoInstallPackage extends Command
         Artisan::call('vendor:publish', [
             '--provider' => 'Verkdev\StripeBladeUi\StripeBladeUiServiceProvider',
             '--tag' => 'stripe-auto-setup',
-            '--force' => true 
+            '--force' => true
         ]);
+
+        $mainRouteFile = base_path('routes/web.php');
+        if (File::exists($mainRouteFile)) {
+            $currentRouteContent = File::get($mainRouteFile);
+
+            if (!str_contains($currentRouteContent, 'stripe.checkout')) {
+                $packageRoutes = File::get(__DIR__.'/../../routes/web.php');
+
+                $packageRoutesClean = str_replace(['<?php', '?>'], '', $packageRoutes);
+
+                File::append($mainRouteFile, "\n\n// Added by stripebaldeui package\n" . $packageRoutesClean);
+            }
+        }
 
         $this->info('Stripe files successfully copied to your app, routes, views, and config folders!');
     }
