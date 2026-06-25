@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class AutoInstallPackage extends Command
 {
-    // Yeh command ka naam hai
     protected $signature = 'stripeui:auto-install';
     protected $description = 'Automatically copies Stripe Controller, Views, Config, and Routes to user main folders';
 
@@ -15,11 +14,10 @@ class AutoInstallPackage extends Command
     {
         $this->info('Setting up Stripe Blade UI components...');
 
-        // Yeh command chupke se bina user ko tang kiye files copy kar degi
         Artisan::call('vendor:publish', [
             '--provider' => 'Verkdev\StripeBladeUi\StripeBladeUiServiceProvider',
             '--tag' => 'stripe-auto-setup',
-            '--force' => true // Agar pehle se file ho toh override kar de
+            '--force' => true 
         ]);
 
         $this->info('Stripe files successfully copied to your app, routes, views, and config folders!');
