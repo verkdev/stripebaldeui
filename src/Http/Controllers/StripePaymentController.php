@@ -1,18 +1,18 @@
 <?php
 
-namespace Verkdev\StripeBladeUi\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
-class StripePaymentController
+class StripePaymentController extends Controller
 {
     public function index()
     {
         $stripeKey = config('stripe.key') ?? env('STRIPE_KEY');
 
-        return view('stripebaldeui::stripe', compact('stripeKey'));
+        return view('stripe', compact('stripeKey'));
     }
 
     public function checkout(Request $request)
@@ -20,7 +20,10 @@ class StripePaymentController
         $stripeSecret = config('stripe.secret') ?? env('STRIPE_SECRET');
 
         if (!$stripeSecret) {
-            return "Stripe Secret Key missing! Please add STRIPE_SECRET in your .env file.";
+            return response()->json([
+                'status' => false,
+                'message' => 'Stripe Secret Key missing'
+            ]);
         }
 
         Stripe::setApiKey($stripeSecret);
@@ -31,7 +34,7 @@ class StripePaymentController
                 'price_data' => [
                     'currency' => 'usd',
                     'product_data' => [
-                        'name' => 'Sample Package Payment',
+                        'name' => 'Sample Payment',
                     ],
                     'unit_amount' => 1000,
                 ],
@@ -47,6 +50,6 @@ class StripePaymentController
 
     public function success()
     {
-        return "Payment Successful! Thank you for using stripebaldeui.";
+        return 'Payment Successful!';
     }
 }

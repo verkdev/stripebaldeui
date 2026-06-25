@@ -9,31 +9,39 @@ use Illuminate\Support\Facades\File;
 class AutoInstallPackage extends Command
 {
     protected $signature = 'stripeui:auto-install';
-    protected $description = 'Automatically copies Stripe Controller, Views, Config, and Routes to user main folders';
+
+    protected $description = 'Install Stripe Blade UI';
 
     public function handle()
     {
-        $this->info('Setting up Stripe Blade UI components...');
+        $this->info('Installing Stripe Blade UI...');
 
         Artisan::call('vendor:publish', [
             '--provider' => 'Verkdev\StripeBladeUi\StripeBladeUiServiceProvider',
             '--tag' => 'stripe-auto-setup',
-            '--force' => true
+            '--force' => true,
         ]);
 
         $mainRouteFile = base_path('routes/web.php');
+
         if (File::exists($mainRouteFile)) {
-            $currentRouteContent = File::get($mainRouteFile);
 
-            if (!str_contains($currentRouteContent, 'stripe.checkout')) {
-                $packageRoutes = File::get(__DIR__.'/../../routes/web.php');
+            $content = File::get($mainRouteFile);
 
-                $packageRoutesClean = str_replace(['<?php', '?>'], '', $packageRoutes);
+            if (!str_contains($content, "require base_path('routes/stripe.php');")) {
 
-                File::append($mainRouteFile, "\n\n// Added by stripebaldeui package\n" . $packageRoutesClean);
+                File::append(
+                    $mainRouteFile,
+                    PHP_EOL .
+                    PHP_EOL .
+                    "// StripeBladeUI" .
+                    PHP_EOL .
+                    "require base_path('routes/stripe.php');" .
+                    PHP_EOL
+                );
             }
         }
 
-        $this->info('Stripe files successfully copied to your app, routes, views, and config folders!');
+        $this->info('Stripe Blade UI installed successfully.');
     }
 }
